@@ -3,47 +3,72 @@ import {
   View,
   Text,
   StyleSheet,
+  Button,
   Image,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Ensure this is correctly installed
 import ProductData from '../data/data';
 import ProductListScreen from './AllProducts';
+import TransferOwnership from './transferownership';
+import PastTransaction from './pasttransaction';
 
-const ProductDetailsScreen = ({route, navigation}) => {
+const ProductDetailsScreen = ({route, navigation, item}) => {
   // Extract the product details from route.params
   //   const route = useRoute();
   const {product} = route.params;
   return (
-    <ScrollView style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}>
-        <MaterialIcons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
-      <Image source={product.image} style={styles.productImage} />
-      <View style={styles.detailsContainer}>
-        <Text style={styles.productTitle}>{product.name}</Text>
-        <Text style={styles.productId}>Product ID: {product.id}</Text>
-        <Text style={styles.productPrice}>
-          {product.price} ETH ({product.usdPrice})
-        </Text>
-        <Text style={styles.purchaseDate}>
-          Purchased on: {product.purchaseDate}
-        </Text>
-        <Text style={styles.creatorInfo}>Creator: {product.creator}</Text>
-        <Text style={styles.creationDate}>
-          Created on: {product.creationDate}
-        </Text>
-        {/* Add buttons or other interactive elements as needed */}
-      </View>
-    </ScrollView>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <Image source={product.image} style={styles.productImage} />
+        <View style={styles.detailsContainer}>
+          <Text style={styles.productTitle}>{product.name}</Text>
+          <Text style={styles.productId}>Product ID: {product.id}</Text>
+          <Text style={styles.productPrice}>
+            {product.price} ETH ({product.usdPrice})
+          </Text>
+          <Text style={styles.purchaseDate}>
+            Purchased on: {product.purchaseDate}
+          </Text>
+          <Text style={styles.creatorInfo}>Creator: {product.creator}</Text>
+          <Text style={styles.creationDate}>
+            Created on: {product.creationDate}
+          </Text>
+          <View style={styles.buttonContainer}>
+            <Button
+              title="Transfer Ownership"
+              onPress={() =>
+                navigation.navigate('TransferOwnership', {product: item})
+              }
+            />
+            <Button
+              title="View Past Transaction History"
+              onPress={() =>
+                navigation.navigate('PastTransaction', {product: item})
+              }
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff', // Change the color to match your theme
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -51,6 +76,13 @@ const styles = StyleSheet.create({
   backButton: {
     margin: 10,
     // additional styles if needed
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd', // Light gray border color
   },
   productImage: {
     width: '100%',
@@ -87,7 +119,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
   },
-  // Add styles for your buttons and any other elements
+  buttonContainer: {
+    width: '100%',
+    marginTop: 16,
+  },
 });
 
 export default ProductDetailsScreen;

@@ -13,6 +13,7 @@ import {
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Ensure this is correctly installed
 
 import {Ionicons} from '@expo/vector-icons'; // Make sure to install @expo/vector-icons
 import {CurrentRenderContext} from '@react-navigation/native';
@@ -21,13 +22,20 @@ import 'react-native-gesture-handler';
 
 const {width} = Dimensions.get('screen');
 
-const ProfilePage = () => {
+const TransferOwnership = () => {
+  const navigation = useNavigation(); // hook to get the navigation object
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>Profile</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>Transfer Ownership</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -44,6 +52,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
     borderBottomWidth: 1,
@@ -56,6 +65,10 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 20,
     paddingBottom: 230,
+  },
+  backButton: {
+    margin: 10,
+    // additional styles if needed
   },
   button: {
     backgroundColor: '#f0f0f0', // Light gray background for the button
@@ -83,4 +96,4 @@ const styles = StyleSheet.create({
     borderTopColor: '#ddd', // Light gray border color
   },
 });
-export default ProfilePage;
+export default TransferOwnership;
