@@ -45,18 +45,22 @@ const ProductDetailsScreen = ({route, navigation, item}) => {
             Created on: {product.creationDate}
           </Text>
           <View style={styles.buttonContainer}>
-            <Button
-              title="Transfer Ownership"
-              onPress={() =>
-                navigation.navigate('TransferOwnership', {product: item})
-              }
-            />
-            <Button
-              title="View Past Transaction History"
-              onPress={() =>
-                navigation.navigate('PastTransaction', {product: item})
-              }
-            />
+            <TouchableOpacity style={styles.button}>
+              <Text
+                onPress={() =>
+                  navigation.navigate('TransferOwnership', {product: item})
+                }>
+                Transfer Ownership
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text
+                onPress={() =>
+                  navigation.navigate('PastTransaction', {product: item})
+                }>
+                View Past Transactions
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -92,6 +96,20 @@ const styles = StyleSheet.create({
   detailsContainer: {
     padding: 20,
     // additional styles if needed
+  },
+  button: {
+    backgroundColor: '#f0f0f0', // Light gray background for the button
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    elevation: 3, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    marginBottom: 25,
   },
   productTitle: {
     fontSize: 24,

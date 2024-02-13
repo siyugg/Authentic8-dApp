@@ -9,42 +9,13 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native'; // or your navigation library
+import {useRoute} from '@react-navigation/native';
 
 // import {MaterialIcons} from '@expo/vector-icons'; // Make sure to install @expo/vector-icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ProductDetails from './ProductDetails';
 import 'react-native-gesture-handler';
 import ProductData from '../data/data';
-
-// const DATA = [
-//   {
-//     id: '1',
-//     name: 'H Bag',
-//     image: require('../images/h-bag.png'),
-//     username: '@willietanner',
-//     price: '10,815',
-//     change: '+18.00%',
-//     // image: require('image.png'), // Replace with actual image path
-//   },
-//   {
-//     id: '2',
-//     name: 'C Bag',
-//     image: require('../images/c-bag.png'),
-//     username: '@peachyjuice',
-//     price: '35,815',
-//     change: '+20.00%',
-//     // image: require('image.png'), // Replace with actual image path
-//   },
-//   {
-//     id: '3',
-//     name: 'N Shoe',
-//     image: require('../images/n-shoe.png'),
-//     username: '@melonmelon',
-//     price: '8,815',
-//     change: '+9.00%',
-//     // image: require('image.png'), // Replace with actual image path
-//   },
-// ];
 
 const Item = ({name, username, price, change, image, onPress}) => (
   <TouchableOpacity style={styles.item} onPress={onPress}>
@@ -65,6 +36,8 @@ const Item = ({name, username, price, change, image, onPress}) => (
 
 const ProductListScreen = () => {
   const navigation = useNavigation(); // hook to get the navigation object
+  // const route = useRoute();
+  // const {product} = route.params;
 
   const renderItem = ({item}) => (
     <Item

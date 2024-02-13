@@ -7,7 +7,7 @@ import ScanPage from '../screens/scan';
 import Home from '../screens/home';
 import ProfilePage from '../screens/profile';
 import ViewProduct from './ViewProductNavigator';
-import ViewPending from '../screens/viewpending';
+import ViewPending from './ViewPendingNavigator';
 
 const HomeStack = createNativeStackNavigator();
 

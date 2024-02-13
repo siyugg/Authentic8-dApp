@@ -1,86 +1,108 @@
 import React from 'react';
 import {
-  ScrollView,
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
-  Button,
   Image,
+  Button,
 } from 'react-native';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import Foundation from 'react-native-vector-icons/Foundation';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import {Ionicons} from '@expo/vector-icons'; // Make sure to install @expo/vector-icons
-import {CurrentRenderContext} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native'; // or your navigation library
-import 'react-native-gesture-handler';
-
-const {width} = Dimensions.get('screen');
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Make sure to install react-native-vector-icons
 
 const ProfilePage = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>Profile</Text>
+          <TouchableOpacity>
+            <Icon name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Settings</Text>
+          <Image
+            source={{uri: 'your-profile-image-url'}}
+            style={styles.profileImage}
+          />
         </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Account</Text>
+          <Text style={styles.sectionDescription}>
+            Update your info to keep your account
+          </Text>
+          <SettingItem title="Account information" iconName="person-outline" />
+          <SettingItem title="Friends" iconName="people-outline" />
+          <SettingItem title="Notifications" iconName="notifications-none" />
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Privacy</Text>
+          <Text style={styles.sectionDescription}>
+            Customize your privacy to make better
+          </Text>
+          <SettingItem title="Security" iconName="security" />
+          <SettingItem title="Login details" iconName="input" />
+          <SettingItem title="Payment" iconName="payment" />
+          <SettingItem title="Privacy" iconName="privacy-tip" />
+        </View>
+        <Button title="Lock Wallet" onPress={() => {}} />
       </View>
     </SafeAreaView>
   );
 };
 
+const SettingItem = ({title, iconName}) => (
+  <TouchableOpacity style={styles.settingItem}>
+    <Icon name={iconName} size={24} color="black" />
+    <Text style={styles.itemTitle}>{title}</Text>
+    <Icon name="chevron-right" size={24} color="black" />
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff', // Change the color to match your theme
+    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
   },
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd', // Light gray border color
+    justifyContent: 'space-between',
+    padding: 16,
   },
-  headerText: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-  body: {
-    paddingHorizontal: 20,
-    paddingBottom: 230,
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
-  button: {
-    backgroundColor: '#f0f0f0', // Light gray background for the button
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 10,
-    elevation: 3, // Android shadow
-    shadowColor: '#000', // iOS shadow
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    marginBottom: 30,
+  section: {
+    marginTop: 32,
+    paddingHorizontal: 16,
   },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '500',
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
-  tabBar: {
+  sectionDescription: {
+    color: 'gray',
+  },
+  settingItem: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd', // Light gray border color
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  itemTitle: {
+    flex: 1,
+    marginLeft: 16,
+    fontSize: 16,
   },
 });
+
 export default ProfilePage;

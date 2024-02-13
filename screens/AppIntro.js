@@ -24,7 +24,6 @@ import React, {useState} from 'react';
 import {View, Text, Button, StyleSheet, Dimensions} from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {useNavigation} from '@react-navigation/native';
-import ConnectWallet from './connectwallet';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -47,16 +46,16 @@ const IntroScreen = ({item}) => {
 const introData = [
   {
     title: 'Welcome to the App',
-    text: 'This is the first intro screen',
+    text: '',
     showButton: false,
   },
   {
     title: 'Explore Features',
-    text: 'Here is some more info about the app',
+    text: '',
     showButton: false,
   },
   {
-    title: 'Get Started!',
+    title: 'Get Started with Authentic8!',
     text: 'Last intro screen before you start',
     showButton: true,
   },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ScrollView,
   SafeAreaView,
@@ -8,8 +8,11 @@ import {
   Dimensions,
   TouchableOpacity,
   Button,
+  TextInput,
   Image,
 } from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,39 +22,54 @@ import {CurrentRenderContext} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native'; // or your navigation library
 import 'react-native-gesture-handler';
 
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import AllProducts from './AllProducts';
-import ViewProduct from '../navigators/ViewProductNavigator';
-
 const {width} = Dimensions.get('screen');
 
-const Home = () => {
-  const navigation = useNavigation(); // hook to get the navigation object
-
+const TransactionDetails = ({route, navigation, item}) => {
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [recipientName, setRecipientName] = useState('');
+  const {product} = route.params;
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>Home</Text>
-        </View>
-        {/* Body */}
-        <View style={styles.body}>
-          <TouchableOpacity style={styles.button}>
-            <Text
-              onPress={() => navigation.navigate('ViewProduct')}
-              style={styles.buttonText}>
-              View My Products
-            </Text>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}>
+            <MaterialIcons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text
-              onPress={() => navigation.navigate('ViewPending')}
-              style={styles.buttonText}>
-              View Pending
-            </Text>
-          </TouchableOpacity>
+          <Text style={styles.headerText}>Transaction Details</Text>
         </View>
+        <View style={styles.detailsContainer}>
+          <Image
+            source={require('../images/c-bag.png')}
+            style={styles.productImage}
+          />
+          <Text style={styles.productTitle}>{product.name}</Text>
+          <Text style={styles.productId}>{product.id}</Text>
+          <Text style={styles.productPrice}>{product.usdPrice}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Recipient Address"
+            value={recipientAddress}
+            onChangeText={setRecipientAddress}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Recipient Name"
+            value={recipientName}
+            onChangeText={setRecipientName}
+            style={styles.input}
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            /* Handle the next button press */
+          }}>
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -67,11 +85,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd', // Light gray border color
+  },
+  detailsContainer: {
+    padding: 20,
+    // additional styles if needed
   },
   headerText: {
     fontSize: 20,
@@ -107,4 +128,4 @@ const styles = StyleSheet.create({
     borderTopColor: '#ddd', // Light gray border color
   },
 });
-export default Home;
+export default TransactionDetails;

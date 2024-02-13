@@ -8,6 +8,7 @@ import ProductDetails from '../screens/ProductDetails';
 import ProductListScreen from '../screens/AllProducts';
 import TransferOwnership from '../screens/transferownership';
 import PastTransaction from '../screens/pasttransaction';
+import TransactionDetails from '../screens/transactionDetails';
 
 const ProductStack = createNativeStackNavigator();
 
@@ -32,6 +33,11 @@ function ViewProduct(initialRouteName) {
       <ProductStack.Screen
         name="PastTransaction"
         component={PastTransaction}
+        options={{headerShown: false}}
+      />
+      <ProductStack.Screen
+        name="TransactionDetails"
+        component={TransactionDetails}
         options={{headerShown: false}}
       />
     </ProductStack.Navigator>

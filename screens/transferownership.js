@@ -19,11 +19,15 @@ import {Ionicons} from '@expo/vector-icons'; // Make sure to install @expo/vecto
 import {CurrentRenderContext} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native'; // or your navigation library
 import 'react-native-gesture-handler';
+import ProductData from '../data/data';
+
+import TransactionDetails from './transactionDetails';
 
 const {width} = Dimensions.get('screen');
 
-const TransferOwnership = () => {
-  const navigation = useNavigation(); // hook to get the navigation object
+const TransferOwnership = ({route, navigation, item}) => {
+  //   const navigation = useNavigation(); // hook to get the navigation object
+  const {product} = route.params;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -37,6 +41,15 @@ const TransferOwnership = () => {
           </TouchableOpacity>
           <Text style={styles.headerText}>Transfer Ownership</Text>
         </View>
+        <Text>Scan QR code here</Text>
+        {/* <Text style={styles.productTitle}>{product.name}</Text> */}
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('TransactionDetails', {product: item})
+          }>
+          <Text>Next</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
