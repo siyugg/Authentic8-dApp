@@ -8,6 +8,7 @@ import Home from './home';
 import React from 'react';
 import {Text} from 'react-native';
 import HomeStackNavigate from '../navigators/HomeStackNavigator';
+import ProfileStackNavigate from '../navigators/ProfileNavigator';
 
 const HomeTab = ({navigation}) => {
   const Tab = createMaterialBottomTabNavigator();
@@ -39,7 +40,7 @@ const HomeTab = ({navigation}) => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfilePage}
+        component={ProfileStackNavigate}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({color}) => (

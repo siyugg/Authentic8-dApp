@@ -9,8 +9,14 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Make sure to install react-native-vector-icons
+import WalletConnectionManager from './connectwallet';
+import {useNavigation} from '@react-navigation/native'; // or your navigation library
+
+import CreateNewToken from './CreateNewTokenold2';
+import testCreateToken from './createNewToken';
 
 const ProfilePage = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -24,26 +30,34 @@ const ProfilePage = () => {
             style={styles.profileImage}
           />
         </View>
+        <WalletConnectionManager />
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Mine a Token</Text>
+          <Text style={styles.sectionDescription}></Text>
+          <TouchableOpacity style={styles.button}>
+            <Text
+              onPress={() => navigation.navigate('createNewToken')}
+              style={styles.buttonText}>
+              Create New Token
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
-          <Text style={styles.sectionDescription}>
-            Update your info to keep your account
-          </Text>
+          <Text style={styles.sectionDescription}></Text>
           <SettingItem title="Account information" iconName="person-outline" />
           <SettingItem title="Friends" iconName="people-outline" />
           <SettingItem title="Notifications" iconName="notifications-none" />
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Privacy</Text>
-          <Text style={styles.sectionDescription}>
-            Customize your privacy to make better
-          </Text>
+          {/* <Text style={styles.sectionTitle}>Privacy</Text> */}
+          <Text style={styles.sectionDescription}></Text>
           <SettingItem title="Security" iconName="security" />
           <SettingItem title="Login details" iconName="input" />
           <SettingItem title="Payment" iconName="payment" />
           <SettingItem title="Privacy" iconName="privacy-tip" />
         </View>
-        <Button title="Lock Wallet" onPress={() => {}} />
+        <Button title="Lock Wallet" onPress={{}} />
       </View>
     </SafeAreaView>
   );
@@ -51,9 +65,9 @@ const ProfilePage = () => {
 
 const SettingItem = ({title, iconName}) => (
   <TouchableOpacity style={styles.settingItem}>
-    <Icon name={iconName} size={24} color="black" />
+    {/* <Icon name={iconName} size={24} color="black" /> */}
     <Text style={styles.itemTitle}>{title}</Text>
-    <Icon name="chevron-right" size={24} color="black" />
+    {/* <Icon name="chevron-right" size={24} color="black" /> */}
   </TouchableOpacity>
 );
 
@@ -102,6 +116,24 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 16,
     fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#f0f0f0', // Light gray background for the button
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    elevation: 3, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    marginBottom: 30,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
 
