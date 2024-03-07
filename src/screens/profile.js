@@ -12,9 +12,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons'; // Make sure to inst
 import WalletConnectionManager from './connectwallet';
 import {useNavigation} from '@react-navigation/native'; // or your navigation library
 
-import CreateNewToken from './CreateNewTokenold2';
-import testCreateToken from './createNewToken';
-
 const ProfilePage = () => {
   const navigation = useNavigation();
   return (

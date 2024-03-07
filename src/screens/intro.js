@@ -7,7 +7,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import Button from '../assets/common/button';
+import Button from '../../assets/common/button';
 import logo from '../assets/logo/logo.png';
 import Iphone from '../assets/image/Iphone.png';
 const {width} = Dimensions.get('screen');

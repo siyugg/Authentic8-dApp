@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ScrollView,
   SafeAreaView,
@@ -8,47 +8,66 @@ import {
   Dimensions,
   TouchableOpacity,
   Button,
+  TextInput,
   Image,
 } from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Ensure this is correctly installed
 
 import {Ionicons} from '@expo/vector-icons'; // Make sure to install @expo/vector-icons
 import {CurrentRenderContext} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native'; // or your navigation library
 import 'react-native-gesture-handler';
-import ProductData from '../data/data';
-
-import TransactionDetails from './transactionDetails';
 
 const {width} = Dimensions.get('screen');
 
-const TransferOwnership = ({route, navigation, item}) => {
-  //   const navigation = useNavigation(); // hook to get the navigation object
+const TransactionDetails = ({route, navigation, item}) => {
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [recipientName, setRecipientName] = useState('');
   const {product} = route.params;
-
+  // const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}>
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles.headerText}>Transfer Ownership</Text>
+          <Text style={styles.headerText}>Transaction Details</Text>
         </View>
-        <Text>Scan QR code here</Text>
-        {/* <Text style={styles.productTitle}>{product.name}</Text> */}
-
+        <View style={styles.detailsContainer}>
+          <Image
+            source={require('../images/c-bag.png')}
+            style={styles.productImage}
+          />
+          <Text style={styles.productTitle}>{product.name}</Text>
+          <Text style={styles.productId}>{product.id}</Text>
+          <Text style={styles.productPrice}>{product.usdPrice}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Recipient Address"
+            value={recipientAddress}
+            onChangeText={setRecipientAddress}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Recipient Name"
+            value={recipientName}
+            onChangeText={setRecipientName}
+            style={styles.input}
+          />
+        </View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('TransactionDetails', {product: item})
-          }>
-          <Text>Next</Text>
+          style={styles.button}
+          onPress={() => navigation.navigate('ConfirmTransaction')}>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -65,11 +84,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd', // Light gray border color
+  },
+  detailsContainer: {
+    padding: 20,
+    // additional styles if needed
   },
   headerText: {
     fontSize: 20,
@@ -78,10 +100,6 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 20,
     paddingBottom: 230,
-  },
-  backButton: {
-    margin: 10,
-    // additional styles if needed
   },
   button: {
     backgroundColor: '#f0f0f0', // Light gray background for the button
@@ -109,4 +127,4 @@ const styles = StyleSheet.create({
     borderTopColor: '#ddd', // Light gray border color
   },
 });
-export default TransferOwnership;
+export default TransactionDetails;
