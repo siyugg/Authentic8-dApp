@@ -1,34 +1,20 @@
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import IntroScreen from '../screens/intro';
-// import Home from '../screens/home';
-// const Stack = createNativeStackNavigator();
-
-// export default function AppNavigator({initialRouteName}) {
-//   return (
-//     <Stack.Navigator initialRouteName={initialRouteName}>
-//       <Stack.Screen
-//         name="IntroScreen"
-//         component={IntroScreen}
-//         options={{headerShown: false}}
-//       />
-//       <Stack.Screen
-//         name="Home"
-//         component={Home}
-//         options={{headerShown: false}}
-//       />
-//     </Stack.Navigator>
-//   );
-// }
-
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, Button, StyleSheet, Dimensions} from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {useNavigation} from '@react-navigation/native';
-
+import WalletConnectionManager from './wallet_connection/WalletConnectionManager';
+import {useWallet} from './wallet_connection/walletContext';
 const {width: screenWidth} = Dimensions.get('window');
 
 const IntroScreen = ({item}) => {
   const navigation = useNavigation();
+  const {isConnected} = useWallet();
+  useEffect(() => {
+    if (isConnected) {
+      navigation.navigate('Home');
+    }
+  }, [isConnected, navigation]);
+
   return (
     <View style={styles.slide}>
       <Text style={styles.title}>{item.title}</Text>

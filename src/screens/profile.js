@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   Text,
@@ -6,14 +6,25 @@ import {
   TouchableOpacity,
   Image,
   Button,
+  Pressable,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Make sure to install react-native-vector-icons
 import WalletConnectionManager from './connectwallet';
 import {useNavigation} from '@react-navigation/native'; // or your navigation library
-
+import {useWallet} from './wallet_connection/walletContext';
 const ProfilePage = () => {
   const navigation = useNavigation();
+  const {address, isConnected, connectWallet, disconnectWallet} = useWallet();
+  const handleButtonPress = () => {
+    if (isConnected) {
+      console.log('wallet is connected');
+      disconnectWallet();
+    } else {
+      console.log('Wallet is not connected');
+      connectWallet();
+    }
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -27,13 +38,33 @@ const ProfilePage = () => {
             style={styles.profileImage}
           />
         </View>
-        <WalletConnectionManager />
+        {/* <WalletConnectionManager /> */}
+
+        <View>
+          {isConnected ? (
+            <>
+              <Text>Your Address:</Text>
+              <Text>{address}</Text>
+              <Button title="Disconnect" onPress={handleButtonPress}></Button>
+            </>
+          ) : (
+            <>
+              <Button title="Connect" onPress={handleButtonPress}></Button>
+            </>
+          )}
+        </View>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Mine a Token</Text>
           <Text style={styles.sectionDescription}></Text>
           <TouchableOpacity style={styles.button}>
             <Text
-              onPress={() => navigation.navigate('createNewToken')}
+              onPress={() => {
+                try {
+                  navigation.navigate('createNewToken');
+                } catch (error) {
+                  console.log('unable to open', error);
+                }
+              }}
               style={styles.buttonText}>
               Create New Token
             </Text>
@@ -84,6 +115,11 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+  pressableMargin: {
+    marginTop: 16,
+    marginLeft: 16,
     fontWeight: 'bold',
   },
   profileImage: {

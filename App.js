@@ -1,12 +1,14 @@
-import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import React from 'react';
 import AppNavigator from './src/navigators/AppNavigator';
+import {NavigationContainer} from '@react-navigation/native';
+import {WalletProvider} from './src/screens/wallet_connection/walletContext';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <WalletProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </WalletProvider>
   );
 }
