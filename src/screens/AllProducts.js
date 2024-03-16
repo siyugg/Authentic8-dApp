@@ -68,22 +68,6 @@ const ProductListScreen = () => {
         />
       </View>
     </SafeAreaView>
-
-    /* <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabItem}>
-          <MaterialIcons name="search" size={24} color="black" />
-          <Text>Requests</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <MaterialIcons name="home" size={24} color="black" />
-          <Text>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
-          <MaterialIcons name="person" size={24} color="black" />
-          <Text>Profile</Text>
-        </TouchableOpacity>
-      </View> */
-    // </View>
   );
 };
 

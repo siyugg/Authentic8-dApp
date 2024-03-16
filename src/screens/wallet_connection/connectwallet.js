@@ -10,7 +10,7 @@ import {
   useWalletConnectModal,
 } from '@walletconnect/modal-react-native';
 
-const projectId = '91068e323d87f3f46c7c134efcf234f6';
+const projectId = process.env.REACT_APP_WALLETCONNECT_PROJECT_ID;
 const providerMetadata = {
   name: 'Authentic8',
   description: 'Authentic8',

@@ -15,10 +15,11 @@ import {
 } from '@walletconnect/modal-react-native';
 import {useWallet} from './wallet_connection/walletContext';
 import {ethers} from 'ethers';
-import contractABI from '../data/contractABI.json';
+import {contractAddress, contractABI} from '../data/contractInfo';
 import WalletConnectionManager from './connectwallet';
 import pinataFileUploader from '../components/upload-file-to-pinata';
-import ConnectWallet from './connectwallet';
+import fetchIPFSData from '../components/retrieve-ipfs-data';
+// import activateContract from '../components/getContract';
 
 const CreateNewToken = () => {
   const [productName, setProductName] = useState('');
@@ -30,40 +31,29 @@ const CreateNewToken = () => {
   const qrRef = useRef();
   const [cid, setCid] = useState('');
   const [productInfo, setProductInfo] = useState(null);
-  const {address, isConnected, provider} = useWallet();
+  const {address, isConnected} = useWallet();
   const ganacheUrl = process.env.REACT_APP_GANACHE_URL;
   const privateKey = process.env.REACT_APP_ACCOUNT_PRIVATE_KEY;
-  const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
 
   if (!isConnected) {
     console.log('your app is not connected');
     return null;
   }
-
-  const fetchIPFSData = async cid => {
-    // Construct the URL using the CID
-    const url = `https://gateway.pinata.cloud/ipfs/${cid}`;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Failed to fetch data from IPFS');
-      const data = await response.json();
-      setProductInfo(data);
-    } catch (error) {
-      console.error('Error fetching IPFS data:', error);
-      setProductInfo(null);
-    }
-  };
+  const provider = new ethers.providers.JsonRpcProvider(ganacheUrl);
+  const signer = new ethers.Wallet(privateKey, provider);
+  const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
   const activateContract = async ({cid}) => {
+    // 2.Connect to Metamask
     console.log(`Attempting to connect to Ganache at ${ganacheUrl}`);
-    const provider = new ethers.providers.JsonRpcProvider(ganacheUrl);
+    // const provider = new ethers.providers.JsonRpcProvider(ganacheUrl);
     // console.log('Provider instantiated:', provider);
 
-    const signer = new ethers.Wallet(privateKey, provider);
+    // const signer = new ethers.Wallet(privateKey, provider);
     // console.log('signer ready: ', signer);
 
     // Connect to contract
-    const contract = new ethers.Contract(contractAddress, contractABI, signer);
+    // const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
     console.log('Initiating transaction');
     try {
@@ -76,6 +66,9 @@ const CreateNewToken = () => {
       console.log('receipt: ', receipt);
       balance = await contract.balanceOf(address);
       console.log('assets balance: ', balance.toString());
+      // contract.on('TokenMinted', (to, tokenId, cid) => {
+      //   console.log(`Token with ID ${tokenId} minted to ${to} with CID ${cid}`);
+      // });
     } catch (error) {
       console.error('Error in initiating transaction: ', error);
     }
@@ -89,53 +82,24 @@ const CreateNewToken = () => {
       // const cid = 'dummy';
       setCid(cid); // Update state with the returned CID
       console.log(`Upload success! IPFS hash: ${cid}`);
-      // fetchIPFSData(cid);
+      fetchIPFSData(cid, setProductInfo);
       await activateContract({cid});
-
-      //2. Connect to Etherum
-
-      //   // Mint new token with the CID as tokenURI
-      //   // const transaction = await contract.safeMint(
-      //   //   // signer.getAddress(),
-      //   //   address,
-      //   //   `ipfs://${cid}`,
-      //   // );
-      //   // console.log('transaction:', transaction);
-      //   const receipt = await transaction.wait();
-      //   //Fetch tokenId
-      //   const currentTokenId = await contract._tokenIdCounter();
-      //   const tokenId = currentTokenId.sub(1);
-
-      //   console.log(
-      //     `Token minted succesfully with tokenId:
-      //     ${tokenId.toString()}`,
-      //   );
-      // } catch (error) {
-      //   console.log('Error connectingto web3 provider', error);
-      // }
-      // // } else {
-      // //   console.error('Ethereum provider (e.g., MetaMask) is not available.');
-      // // }
-
-      // // Generate QR code data
-      // const qrData = {
-      //   tokenId: tokenId.toString(),
-      //   contractAddress: contractAddress,
-      //   cid: cid,
-      // };
-      // const qrDataString = JSON.stringify(qrData);
-      // const encryptedData = CryptoJS.AES.encrypt(
-      //   qrDataString,
-      //   secretKey,
-      // ).toString();
-      // setQrValue(encryptedData);
-      // setShowQR(true);
+      const tokenId = contract.on('TokenMinted', (to, tokenId, cid) => {
+        const qrData = {
+          tokenId: tokenId.toString(),
+          contractAddress: contractAddress,
+          cid: cid,
+        };
+        const qrDataString = JSON.stringify(qrData);
+        const encryptedData = CryptoJS.AES.encrypt(
+          qrDataString,
+          secretKey,
+        ).toString();
+        setQrValue(encryptedData);
+        setShowQR(true);
+      });
     } catch (error) {
-      // console.error('Failed to generate QR code:', error);
-      console.log(
-        'Failed to generate QR code. Check console for details.',
-        error,
-      );
+      console.error('Failed to generate QR code:', error);
     }
   };
   return (
