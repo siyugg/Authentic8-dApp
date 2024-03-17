@@ -20,6 +20,7 @@ import WalletConnectionManager from './connectwallet';
 import pinataFileUploader from '../components/upload-file-to-pinata';
 import fetchIPFSData from '../components/retrieve-ipfs-data';
 // import activateContract from '../components/getContract';
+import contract from '../components/contractSetup';
 
 const CreateNewToken = () => {
   const [productName, setProductName] = useState('');
@@ -39,22 +40,9 @@ const CreateNewToken = () => {
     console.log('your app is not connected');
     return null;
   }
-  const provider = new ethers.providers.JsonRpcProvider(ganacheUrl);
-  const signer = new ethers.Wallet(privateKey, provider);
-  const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
   const activateContract = async ({cid}) => {
     // 2.Connect to Metamask
-    console.log(`Attempting to connect to Ganache at ${ganacheUrl}`);
-    // const provider = new ethers.providers.JsonRpcProvider(ganacheUrl);
-    // console.log('Provider instantiated:', provider);
-
-    // const signer = new ethers.Wallet(privateKey, provider);
-    // console.log('signer ready: ', signer);
-
-    // Connect to contract
-    // const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
     console.log('Initiating transaction');
     try {
       const transaction = await contract.safeMint(address, cid, {
@@ -79,10 +67,9 @@ const CreateNewToken = () => {
       // 1. Upload product information to IPFS
       const productInfo = {productName, productId, manufactureDate};
       const cid = await pinataFileUploader(productInfo);
-      // const cid = 'dummy';
       setCid(cid); // Update state with the returned CID
       console.log(`Upload success! IPFS hash: ${cid}`);
-      fetchIPFSData(cid, setProductInfo);
+      fetchIPFSData(cid);
       await activateContract({cid});
       const tokenId = contract.on('TokenMinted', (to, tokenId, cid) => {
         const qrData = {

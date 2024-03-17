@@ -13,13 +13,9 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {Ionicons} from '@expo/vector-icons'; // Make sure to install @expo/vector-icons
-import {CurrentRenderContext} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native'; // or your navigation library
 import 'react-native-gesture-handler';
 
 const {width} = Dimensions.get('screen');
@@ -28,7 +24,6 @@ const TransactionDetails = ({route, navigation, item}) => {
   const [recipientAddress, setRecipientAddress] = useState('');
   const [recipientName, setRecipientName] = useState('');
   const {product} = route.params;
-  // const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -41,32 +36,37 @@ const TransactionDetails = ({route, navigation, item}) => {
           </TouchableOpacity>
           <Text style={styles.headerText}>Transaction Details</Text>
         </View>
-        <View style={styles.detailsContainer}>
-          <Image
-            source={require('../images/c-bag.png')}
-            style={styles.productImage}
-          />
-          <Text style={styles.productTitle}>{product.name}</Text>
-          <Text style={styles.productId}>{product.id}</Text>
-          <Text style={styles.productPrice}>{product.usdPrice}</Text>
-        </View>
-        <View style={styles.inputContainer}>
+
+        {/* Recipient Address Input */}
+        <View style={styles.inputBox}>
+          <Text style={styles.inputLabel}>Recipient Address</Text>
           <TextInput
-            placeholder="Recipient Address"
+            placeholder="Enter recipient's address"
             value={recipientAddress}
             onChangeText={setRecipientAddress}
             style={styles.input}
           />
+        </View>
+
+        {/* Recipient Name Input */}
+        {/* <View style={styles.inputBox}>
+          <Text style={styles.inputLabel}>Recipient Name</Text>
           <TextInput
-            placeholder="Recipient Name"
+            placeholder="Enter recipient's name"
             value={recipientName}
             onChangeText={setRecipientName}
             style={styles.input}
-          />
-        </View>
+          /> */}
+        {/* </View> */}
+
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('ConfirmTransaction')}>
+          onPress={() =>
+            navigation.navigate('ConfirmTransaction', {
+              product: product,
+              recipientAddress: recipientAddress,
+            })
+          }>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </View>
@@ -77,54 +77,56 @@ const TransactionDetails = ({route, navigation, item}) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff', // Change the color to match your theme
+    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    padding: 20,
   },
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd', // Light gray border color
+    marginBottom: 20,
   },
-  detailsContainer: {
-    padding: 20,
-    // additional styles if needed
+  backButton: {
+    marginRight: 10,
   },
   headerText: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-  body: {
-    paddingHorizontal: 20,
-    paddingBottom: 230,
+  inputBox: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd', // Light gray border
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
   },
   button: {
-    backgroundColor: '#f0f0f0', // Light gray background for the button
+    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 10,
-    elevation: 3, // Android shadow
-    shadowColor: '#000', // iOS shadow
+    elevation: 3,
+    shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    marginBottom: 30,
+    marginTop: 10,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '500',
   },
-  tabBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd', // Light gray border color
-  },
 });
+
 export default TransactionDetails;

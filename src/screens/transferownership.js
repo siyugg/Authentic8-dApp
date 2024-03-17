@@ -26,7 +26,6 @@ import TransactionDetails from './transactionDetails';
 const {width} = Dimensions.get('screen');
 
 const TransferOwnership = ({route, navigation, item}) => {
-  //   const navigation = useNavigation(); // hook to get the navigation object
   const {product} = route.params;
 
   return (
@@ -41,15 +40,16 @@ const TransferOwnership = ({route, navigation, item}) => {
           </TouchableOpacity>
           <Text style={styles.headerText}>Transfer Ownership</Text>
         </View>
-        <Text>Scan QR code here</Text>
-        {/* <Text style={styles.productTitle}>{product.name}</Text> */}
-
-        <TouchableOpacity
+        <View>
+          <Text>Scan QR code here</Text>
+          {/* <Text>product name: {product.productName}</Text> */}
+        </View>
+        <Button
+          title="Next"
+          style={styles.nextButton}
           onPress={() =>
-            navigation.navigate('TransactionDetails', {product: item})
-          }>
-          <Button style={styles.nextButton}>Next</Button>
-        </TouchableOpacity>
+            navigation.navigate('TransactionDetails', {product: product})
+          }></Button>
       </View>
     </SafeAreaView>
   );

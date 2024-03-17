@@ -15,11 +15,16 @@ import ProductData from '../data/data';
 import ProductListScreen from './AllProducts';
 import TransferOwnership from './transferownership';
 import PastTransaction from './pasttransaction';
+import contract from '../components/contractSetup';
+import {useWallet} from './wallet_connection/walletContext';
 
 const ProductDetailsScreen = ({route, navigation, item}) => {
   // Extract the product details from route.params
-  //   const route = useRoute();
+  // const route = useRoute();
   const {product} = route.params;
+  const {address} = useWallet();
+  console.log(product.tokenId);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
@@ -32,23 +37,23 @@ const ProductDetailsScreen = ({route, navigation, item}) => {
         </View>
         <Image source={product.image} style={styles.productImage} />
         <View style={styles.detailsContainer}>
-          <Text style={styles.productTitle}>{product.name}</Text>
-          <Text style={styles.productId}>Product ID: {product.id}</Text>
+          <Text style={styles.productTitle}>{product.productName}</Text>
+          <Text style={styles.productId}>Product ID: {product.productId}</Text>
           <Text style={styles.productPrice}>
             {product.price} ETH ({product.usdPrice})
           </Text>
           <Text style={styles.purchaseDate}>
-            Purchased on: {product.purchaseDate}
+            Purchased on: {product.manufactureDate}
           </Text>
-          <Text style={styles.creatorInfo}>Creator: {product.creator}</Text>
+          <Text style={styles.creatorInfo}>Creator: {address}</Text>
           <Text style={styles.creationDate}>
-            Created on: {product.creationDate}
+            Created on: {product.manufactureDate}
           </Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button}>
               <Text
                 onPress={() =>
-                  navigation.navigate('TransferOwnership', {product: item})
+                  navigation.navigate('TransactionDetails', {product: product})
                 }>
                 Transfer Ownership
               </Text>

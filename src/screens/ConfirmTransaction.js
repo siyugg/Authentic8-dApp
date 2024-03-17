@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {ethers} from 'ethers';
 import {
   ScrollView,
   SafeAreaView,
@@ -12,23 +13,79 @@ import {
   Image,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import Foundation from 'react-native-vector-icons/Foundation';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import {Ionicons} from '@expo/vector-icons'; // Make sure to install @expo/vector-icons
-import {CurrentRenderContext} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native'; // or your navigation library
 import 'react-native-gesture-handler';
+import contract from '../components/contractSetup';
+import {useWallet} from './wallet_connection/walletContext';
 
 const {width} = Dimensions.get('screen');
 
 const ConfirmTransaction = ({route, navigation, item}) => {
-  const [recipientAddress, setRecipientAddress] = useState('');
+  // const [recipientAddress, setRecipientAddress] = useState('');
   const [recipientName, setRecipientName] = useState('');
-  const {product} = route.params;
-  // const navigation = useNavigation();
+  const {product, recipientAddress} = route.params;
+  const {address} = useWallet();
+  const gasLimit = ethers.utils.hexlify(6721975); // Example gas limit, you may need more or less
+
+  // This function should be called after a successful transaction.
+  const refreshProductList = async () => {
+    const updatedProducts = [];
+    const balance = await contract.balanceOf(address);
+
+    for (let i = 0; i < balance.toNumber(); i++) {
+      const tokenId = await contract.tokenOfOwnerByIndex(address, i);
+      const cid = await contract.getCID(tokenId);
+      const productData = await fetchIPFSData(cid);
+      updatedProducts.push({
+        ...productData,
+        tokenId: tokenId.toString(),
+      });
+    }
+
+    setProducts(updatedProducts);
+  };
+
+  // Call this function after the transaction is confirmed
+
+  const handleTransfer = async () => {
+    console.log('attempting to initiate transaction');
+
+    let owner = await contract.ownerOf(product.tokenId);
+    if (owner !== address) {
+      const isApproved = await contract.getApproved(product.tokenId);
+      const isOperatorApproved = await contract.isApprovedForAll(
+        owner,
+        address,
+      );
+      if (address !== isApproved && !isOperatorApproved) {
+        console.log(
+          'The caller is neither the owner nor approved to transfer this token.',
+        );
+        return;
+      }
+    }
+
+    try {
+      console.log(
+        `from ${address}, to: ${recipientAddress}, id:${product.tokenId}`,
+      );
+      owner = await contract.ownerOf(product.tokenId);
+      console.log(`owner of ${product.tokenId} is ${owner}`);
+
+      const tx = await contract
+        .connect(signer)
+        .transferFrom(address, recipientAddress, product.tokenId, {
+          gasLimit: gasLimit,
+        });
+      await tx.wait();
+      console.log(tx);
+      console.log('success');
+      refreshProductList();
+
+      // navigation.navigate('SuccessTransaction');
+    } catch (error) {
+      console.log('Failed to transferownership', error);
+    }
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -39,35 +96,21 @@ const ConfirmTransaction = ({route, navigation, item}) => {
             style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-          <Text style={styles.headerText}>Transaction Details</Text>
+          <Text style={styles.headerText}>Confirm Transaction</Text>
         </View>
         <View style={styles.detailsContainer}>
-          <Image
+          {/* <Image
             source={require('../images/c-bag.png')}
             style={styles.productImage}
-          />
-          <Text style={styles.productTitle}>{product.name}</Text>
-          <Text style={styles.productId}>{product.id}</Text>
-          <Text style={styles.productPrice}>{product.usdPrice}</Text>
+          /> */}
+          <Text style={styles.productTitle}>{product.productName}</Text>
+          <Text style={styles.productId}>{product.productId}</Text>
+          <Text style={styles.productPrice}>{product.productId}</Text>
+          <Text>Transfer to: {recipientAddress}</Text>
         </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Recipient Address"
-            value={recipientAddress}
-            onChangeText={setRecipientAddress}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="Recipient Name"
-            value={recipientName}
-            onChangeText={setRecipientName}
-            style={styles.input}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('SuccessTransaction')}>
-          <Text style={styles.buttonText}>Next</Text>
+
+        <TouchableOpacity style={styles.button} onPress={handleTransfer}>
+          <Text style={styles.buttonText}>Transfer my Ownership</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
